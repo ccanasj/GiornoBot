@@ -15,6 +15,6 @@ def get_info():
 
     ability = translator.translate(ability,src='en',dest = 'es')
 
-    return [Standname,abilityname,ability]
+    return [Standname,abilityname,ability.text]
 
 
