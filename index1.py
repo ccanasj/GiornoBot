@@ -15,51 +15,64 @@ punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
          9: 'Mordiendo', 10: 'Con las Muñecas', 11: 'Con un chasquido',
          12: 'Hablando', 13: 'Con las piernas', 14: 'Con ganas de morir'}
 
+intents = discord.Intents.all()
 translator = Translator()
-bot = commands.Bot(command_prefix='$', case_insensitive=True)
+bot = commands.Bot(command_prefix='$', case_insensitive=True,intents = intents)
 mensaje_borrado = None
 
+@bot.command(aliases=['Moody','MB'])
+async def MoodyBlues(ctx,lang,*,oracion):
+    if lang not in gt.LANGUAGES:
+        await ctx.send('Watashi da koto aru, WTF')
+    else:
+        a = translator.translate(oracion,dest = lang)
+        await ctx.send(f'*{a.text}*')
 
-@bot.command(aliases=['MoodyBlues','mb'])
-async def moody(ctx,lang,*,oracion):
-   translator = Translator()
-   if lang not in gt.LANGUAGES:
-      await ctx.send('Watashi da koto aru, WTF')
-   else:
-      a = translator.translate(oracion,dest = lang)
-      await ctx.send(a.text)
+@bot.command()
+async def ZaWarudo(ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=True,send_messages=False)
+    await ctx.send('https://i.pinimg.com/originals/af/c8/7b/afc87b53146aaeaf78eaad0bb50fd8a2.gif')
+
+@bot.command()
+async def StarPlatinum(ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=True,send_messages=True)
+    await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
 
 @bot.command()
 async def Dio(ctx):
-    await ctx.message.add_reaction(":Planmalo~1:799402450431115287")
+    await ctx.message.add_reaction(":Planmalo:799402450431115287")
     ctx1 = await ctx.send('Jotaro')
     await ctx1.add_reaction("a:Menacing:799687232344686654")
+    def check(reaction, user):
+        return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'
+    try:
+        reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
+    except asyncio.TimeoutError:
+        await ctx.send('https://i.ytimg.com/vi/t3S0PR8_C2w/maxresdefault.jpg')
+    else:
+        await ctx.send('https://i.kym-cdn.com/photos/images/newsfeed/001/488/696/0e7.jpg')
     
 @bot.command()
 async def Requiem(ctx):
-    e = bot.emojis
-    xd = rd.randrange(len(e))
-    for s in e:
-        b = ":" + s.name + ":" + str(s.id)
-        await ctx.message.add_reaction(b)
-    #await ctx.send(bot.get_emoji(s.id).url)
+    e = ctx.guild.emojis
+    await ctx.send(rd.choice(e).url)
 
 @bot.command()
-async def stand(ctx, *, member: discord.Member = None):
+async def Stand(ctx, *, member: discord.Member = None):
     if not member:
         member = ctx.message.author
     userAvatar = member.avatar_url
-    embedVar = discord.Embed(
-        title="Perfil", description="Posible stand master")
-    embedVar.set_image(url=member.avatar_url)
+    color = discord.Colour.random()
+    embedVar = discord.Embed(title="Perfil", description="Posible stand master", color = color)
+    embedVar.set_image(url=userAvatar)
     embedVar.add_field(name="Stand User", value=member.name, inline=False)
     embedVar.add_field(name="Stand Name", value=member.nick, inline=False)
     embedVar.add_field(name="Stand Time", value=member.joined_at, inline=True)
     await ctx.send(embed=embedVar)
 
 
-@bot.command()
-async def Savatar(ctx, member: discord.Member = None, member2: discord.Member = None):
+@bot.command(aliases=['Savatar','SA'])
+async def StandAvatar(ctx, member: discord.Member = None, member2: discord.Member = None):
     if not member:
         member = ctx.message.author
         member2 = None
@@ -72,39 +85,39 @@ async def Savatar(ctx, member: discord.Member = None, member2: discord.Member = 
         userAvatar2 = member2.avatar_url
         await ctx.send(userAvatar2)
 
-@bot.command()
-async def queen(ctx):
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get("https://some-random-api.ml/facts/cat") as r:
-            data = await r.json()
-            embed = discord.Embed(
-                title="Cat",
-                color=ctx.author.color
-            )
-            translator = Translator()
-            a = translator.translate(data['fact'],dest = 'es')
-            embed.add_field(name="Gatitu", value= data['fact'], inline=False)
-            await ctx.send(embed=embed)
+@bot.command(aliases=['KQueen','KQ'])
+async def KillerQueen(ctx):
+    async with ctx.channel.typing():
+        color = discord.Colour.random()
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get("https://some-random-api.ml/facts/cat") as r:
+                data = await r.json()
+                embed = discord.Embed(color=color)
+                translator = Translator()
+                a = translator.translate(data['fact'],src = 'en',dest = 'es')
+                embed.add_field(name = 'Gatitu',value= a.text, inline=False)
+                await ctx.send(embed=embed)
 
-@bot.command(aliases=['bitesthedust'])
+@bot.command(aliases=['btd'])
 @commands.has_permissions(manage_messages = True)
-async def btd(ctx,numero:int = 1):
+async def BitesTheDust(ctx,numero:int = 1):
     await ctx.channel.purge(limit = numero + 1)
     await ctx.channel.send(f'{numero} Mensaje(s) ha(n) mordido el polvo' + ' https://i.pinimg.com/originals/87/9b/5e/879b5e50c9c11adc45aab6ed097943e1.gif')
 
 @bot.command()
 async def Stats(ctx, *, member: discord.Member = None):
-    if not member:
-        member = ctx.message.author
-    nombre = member.name
-    stand  = member.nick
-    if stand == None:
-        stand = 'Sin stand'
-    asset = member.avatar_url_as(size=256)
-    pfp = BytesIO(await asset.read())
-    test.Fondo(nombre= nombre,nick= stand,data=pfp)
-    await ctx.send(file = discord.File('./Imagenes/XD.jpg'))
-
+    async with ctx.channel.typing():
+        if not member:
+            member = ctx.message.author
+        nombre = member.name
+        stand  = member.nick
+        if stand == None:
+            stand = 'Sin stand'
+        asset = member.avatar_url_as(size=256)
+        pfp = BytesIO(await asset.read())
+        test.Fondo(nombre= nombre,nick= stand,data=pfp)
+        await ctx.send(file = discord.File('./Imagenes/XD.jpg'))
+'''
 @bot.command()
 async def Sticky(ctx):
     if ctx.guild == mensaje_borrado.guild:
@@ -117,45 +130,63 @@ async def Sticky(ctx):
             await ctx.send("No se encontro mensaje")
     else:
         await ctx.send("No se encontro mensaje")
-
+'''
 @bot.command()
 async def Zahando(ctx,opcion:int, *, member: discord.Member = None):
-    if not member:
-        member = ctx.message.author
-    avatar = member.avatar_url_as(format="png")
-    if opcion == 1:
-        await ctx.send("https://some-random-api.ml/canvas/gay?avatar=" + str(avatar))
-    elif opcion == 2:
-        await ctx.send("https://some-random-api.ml/canvas/triggered?avatar=" + str(avatar))
-    elif opcion == 3:
-        await ctx.send("https://some-random-api.ml/canvas/invert?avatar=" + str(avatar))
-    elif opcion == 4:
-        await ctx.send("https://some-random-api.ml/canvas/pixelate?avatar=" + str(avatar))
-    elif opcion == 5:
-        await ctx.send("https://some-random-api.ml/canvas/blur?avatar=" + str(avatar))
-    elif opcion == 6:
-        await ctx.send("https://some-random-api.ml/canvas/glass?avatar=" + str(avatar))
-    elif opcion == 7:
-        await ctx.send("https://some-random-api.ml/canvas/wasted?avatar=" + str(avatar))
-    elif opcion == 8:
-        await ctx.send("https://some-random-api.ml/canvas/brightness?avatar=" + str(avatar))
-
+    async with ctx.channel.typing():
+        if not member:
+            member = ctx.message.author
+        avatar = member.avatar_url_as(format = 'png')
+        if opcion == 1:
+            await ctx.send("https://some-random-api.ml/canvas/gay?avatar=" + str(avatar))
+        elif opcion == 2:
+            await ctx.send("https://some-random-api.ml/canvas/triggered?avatar=" + str(avatar))
+        elif opcion == 3:
+            await ctx.send("https://some-random-api.ml/canvas/invert?avatar=" + str(avatar))
+        elif opcion == 4:
+            await ctx.send("https://some-random-api.ml/canvas/pixelate?avatar=" + str(avatar))
+        elif opcion == 5:
+            await ctx.send("https://some-random-api.ml/canvas/blur?avatar=" + str(avatar))
+        elif opcion == 6:
+            await ctx.send("https://some-random-api.ml/canvas/glass?avatar=" + str(avatar))
+        elif opcion == 7:
+            await ctx.send("https://some-random-api.ml/canvas/wasted?avatar=" + str(avatar))
+        elif opcion == 8:
+            await ctx.send("https://some-random-api.ml/canvas/brightness?avatar=" + str(avatar))
+'''
 @bot.listen()
 async def on_message_delete(message):
     global mensaje_borrado
     mensaje_borrado = message
-
+'''
 @bot.command()
-async def ability(ctx):
-    info = url.get_info()
-    embedVar = discord.Embed(timestamp = ctx.message.created_at)
-    embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
-    embedVar.add_field(name='Nombre Stand',value=info[0])
-    embedVar.add_field(name='Nombre Habilidad',value=info[1])
-    embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
-    embedVar.add_field(name='Descripcion',value=info[2], inline=False)
-    embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
-    await ctx.send(embed=embedVar)
+async def Ability(ctx):
+    async with ctx.channel.typing():
+        color = discord.Colour.random()
+        info = url.get_info()
+        embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
+        embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
+        embedVar.add_field(name='Nombre Stand',value=info[0])
+        embedVar.add_field(name='Nombre Habilidad',value=info[1])
+        embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
+        embedVar.add_field(name='Descripcion',value=info[2], inline=False)
+        embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
+        await ctx.send(embed=embedVar)
+
+@bot.event
+async def on_member_join(member):
+    color = discord.Colour.random()
+    embedVar = discord.Embed(color = color)
+    embedVar.add_field(name='Bienvenido/a',value=f' <a:Menacing:799687232344686654> {member.mention} A decidido unirse a {member.guild.name} <a:Menacing:799687232344686654> \n y esta listo para una aventura bizzara')
+    embedVar.set_image(url= 'https://media1.tenor.com/images/392da4650dfa83b3055069e39ad74b45/tenor.gif?itemid=7319727')
+    await member.guild.text_channels[0].send(embed=embedVar)
+          
+@bot.event
+async def on_member_remove(member):
+    color = discord.Colour.random()
+    embedVar = discord.Embed(title= f'{member.name}, Goodbye JOJO',color = color)
+    embedVar.set_image(url= 'https://media1.tenor.com/images/65ae270df87c3c4adcea997e48f60852/tenor.gif?itemid=13710195')
+    await member.guild.text_channels[0].send(embed=embedVar)
 
 @bot.event
 async def on_command_error(ctx,error):
@@ -176,4 +207,4 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
-bot.run('Nzk5NDM3NTkxNTAxNDcxNzc0.YADkRg.iF0Jnh0bKoqvlf4A1fLDfAi0Q3k')
+bot.run('Nzk5NDM3NTkxNTAxNDcxNzc0.YADkRg.yz0iONeUWdscajC-Ghr49dHcH9M')

@@ -13,8 +13,8 @@ def get_info():
     abilityname = soup1.title.string.split('|')[0]
     ability = soup1.find_all('p')[1].text
 
-    ability = translator.translate(ability,src='en',dest = 'es')
+    info_ability = translator.translate(f'{ability}_{abilityname}',src='en',dest = 'es').text.split('_')
 
-    return [Standname,abilityname,ability.text]
+    return [Standname,info_ability[1],info_ability[0]]
 
 
