@@ -3,8 +3,8 @@ import aiohttp
 import asyncio
 import random as rd
 from discord.ext import commands
-#from googletrans import Translator
-#import googletrans as gt
+from googletrans import Translator
+import googletrans as gt
 from io import BytesIO
 import test
 import url
@@ -15,11 +15,11 @@ punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
          9: 'Mordiendo', 10: 'Con las Muñecas', 11: 'Con un chasquido',
          12: 'Hablando', 13: 'Con las piernas', 14: 'Con ganas de morir'}
 
-#translator = Translator()
+translator = Translator()
 bot = commands.Bot(command_prefix='$', case_insensitive=True)
 mensaje_borrado = None
 
-'''
+
 @bot.command(aliases=['MoodyBlues','mb'])
 async def moody(ctx,lang,*,oracion):
    translator = Translator()
@@ -28,7 +28,7 @@ async def moody(ctx,lang,*,oracion):
    else:
       a = translator.translate(oracion,dest = lang)
       await ctx.send(a.text)
-'''
+
 @bot.command()
 async def Dio(ctx):
     await ctx.message.add_reaction(":Planmalo~1:799402450431115287")
@@ -71,7 +71,7 @@ async def Savatar(ctx, member: discord.Member = None, member2: discord.Member = 
         await ctx.send(userAvatar)
         userAvatar2 = member2.avatar_url
         await ctx.send(userAvatar2)
-'''
+
 @bot.command()
 async def queen(ctx):
     async with aiohttp.ClientSession() as cs:
@@ -85,7 +85,7 @@ async def queen(ctx):
             a = translator.translate(data['fact'],dest = 'es')
             embed.add_field(name="Gatitu", value= data['fact'], inline=False)
             await ctx.send(embed=embed)
-'''
+
 @bot.command(aliases=['bitesthedust'])
 @commands.has_permissions(manage_messages = True)
 async def btd(ctx,numero:int = 1):
