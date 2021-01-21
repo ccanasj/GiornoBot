@@ -18,7 +18,7 @@ punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
 intents = discord.Intents.all()
 translator = Translator()
 bot = commands.Bot(command_prefix='$', case_insensitive=True,intents = intents)
-mensaje_borrado = None
+#mensaje_borrado = None
 
 @bot.command(aliases=['Moody','MB'])
 async def MoodyBlues(ctx,lang,*,oracion):
@@ -28,12 +28,14 @@ async def MoodyBlues(ctx,lang,*,oracion):
         a = translator.translate(oracion,dest = lang)
         await ctx.send(f'*{a.text}*')
 
-@bot.command()
+@bot.command(aliases=['ZW'])
+@commands.has_permissions(manage_roles = True,send_messages = True)
 async def ZaWarudo(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=True,send_messages=False)
     await ctx.send('https://i.pinimg.com/originals/af/c8/7b/afc87b53146aaeaf78eaad0bb50fd8a2.gif')
 
-@bot.command()
+@bot.command(aliases=['SP'])
+@commands.has_permissions(manage_roles = True,send_messages = True)
 async def StarPlatinum(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=True,send_messages=True)
     await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
@@ -52,7 +54,7 @@ async def Dio(ctx):
     else:
         await ctx.send('https://i.kym-cdn.com/photos/images/newsfeed/001/488/696/0e7.jpg')
     
-@bot.command()
+@bot.command(aliases=['Re'])
 async def Requiem(ctx):
     e = ctx.guild.emojis
     await ctx.send(rd.choice(e).url)
@@ -103,6 +105,12 @@ async def KillerQueen(ctx):
 async def BitesTheDust(ctx,numero:int = 1):
     await ctx.channel.purge(limit = numero + 1)
     await ctx.channel.send(f'{numero} Mensaje(s) ha(n) mordido el polvo' + ' https://i.pinimg.com/originals/87/9b/5e/879b5e50c9c11adc45aab6ed097943e1.gif')
+
+@bot.command(aliases=['Ec'])
+@commands.has_permissions(manage_messages = True, manage_channels = True)
+async def Echoes(ctx,numero:int = 0):
+    await ctx.channel.edit(slowmode_delay = numero)
+    await ctx.send('https://media1.tenor.com/images/75eb465558d8e2fed82366f81bece938/tenor.gif?itemid=17841933')
 
 @bot.command()
 async def Stats(ctx, *, member: discord.Member = None):
@@ -161,17 +169,16 @@ async def on_message_delete(message):
 '''
 @bot.command()
 async def Ability(ctx):
-    async with ctx.channel.typing():
-        color = discord.Colour.random()
-        info = url.get_info()
-        embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
-        embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
-        embedVar.add_field(name='Nombre Stand',value=info[0])
-        embedVar.add_field(name='Nombre Habilidad',value=info[1])
-        embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
-        embedVar.add_field(name='Descripcion',value=info[2], inline=False)
-        embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
-        await ctx.send(embed=embedVar)
+    color = discord.Colour.random()
+    info = url.get_info()
+    embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
+    embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
+    embedVar.add_field(name='Nombre Stand',value=info[0])
+    embedVar.add_field(name='Nombre Habilidad',value=info[1])
+    embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
+    embedVar.add_field(name='Descripcion',value=info[2], inline=False)
+    embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
+    await ctx.send(embed=embedVar)
 
 @bot.event
 async def on_member_join(member):
