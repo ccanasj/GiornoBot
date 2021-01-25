@@ -13,7 +13,8 @@ punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
          3: 'A voluntad del usuario', 4: 'Con Un arma', 5: 'Abriendo algo',
          6: 'Frotando tu talón', 7: 'Con las Rodillas', 8: 'Cerrando los ojos',
          9: 'Mordiendo', 10: 'Con las Muñecas', 11: 'Con un chasquido',
-         12: 'Hablando', 13: 'Con las piernas', 14: 'Con ganas de morir'}
+         12: 'Hablando', 13: 'Con las piernas', 14: 'Con ganas de morir',
+         15: 'Con miedo', 16: 'Usando algun objeto', 17: 'Con dolor'}
 
 intents = discord.Intents.all()
 translator = Translator()
@@ -275,10 +276,10 @@ async def on_message_delete(message):
     global mensaje_borrado
     mensaje_borrado = message
 '''
-@bot.command()
+@bot.command(aliases=['A'])
 async def Ability(ctx):
     color = discord.Colour.random()
-    info = url.get_info()
+    info = await url.get_info()
     embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
     embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
     embedVar.add_field(name='Nombre Stand',value=info[0])
@@ -286,6 +287,7 @@ async def Ability(ctx):
     embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
     embedVar.add_field(name='Descripcion',value=info[2], inline=False)
     embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
+    embedVar.add_field(name='Limitacion',value=info[3])
     await ctx.send(embed=embedVar)
 
 @bot.event

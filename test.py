@@ -37,7 +37,10 @@ def Fondo(nombre, nick, data):
     draw.text((50,130),nick,(231,228,217),font = font)
     draw.text((730,610),nombre,(231,228,217),font = font)
     pfp = Image.open(data)
-    Back.paste(pfp,(750,115))
+    try:
+        Back.paste(pfp,(750,115),mask = pfp)
+    except:
+        Back.paste(pfp,(750,115))
     Back.save('./Imagenes/XD.jpg')
     buf.close()
 
