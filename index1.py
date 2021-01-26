@@ -98,18 +98,41 @@ async def MoodyBlues(ctx,lang,*,oracion):
         await ctx.send(f'*{a.text}*')
 
 
+@tasks.loop(seconds=1.0)
+async def printer(ctx,emb):
+    emb.set_field_at(index= 0,name = "Tiempo",value = printer.current_loop)
+    await ctx.send(embed = emb)
+
+@bot.command(aliases=['T'])
+@commands.guild_only()
+async def Test(ctx):
+    guild = ctx.guild
+    paginator = commands.Paginator(prefix='*',suffix='*',max_size=2000)
+    for role in guild.roles:
+        paginator.add_line(role.name + ' ' + str(role.id))
+    for page in paginator.pages:
+        await ctx.send(embed= discord.Embed(color= discord.Color.blurple(),description=page)) 
+    #printer.start(ctx,emb)
+
 @bot.command(aliases=['K'])
+@commands.guild_only()
 async def Kakyoin(ctx,*,busqueda):
     async with ctx.channel.typing():
         async with aiohttp.ClientSession() as cs:
-            async with cs.get(f'https://wallhaven.cc/api/v1/search?q={busqueda}') as r:
+            async with cs.get(f'https://wallhaven.cc/api/v1/search?q={busqueda}&sorting=random') as r:
                 data = await r.json()
-                a = data['data'][0]
-                await ctx.send(a['path'])
+                try:  
+                    a = data['data'][0]
+                    await ctx.send(a['path'])
+                except:
+                    await ctx.reply(f' No encontre la busqueda: {busqueda}')
+                
 
 
 @bot.command(aliases=['ZW'])
 @commands.has_permissions(manage_roles = True,send_messages = True)
+@commands.bot_has_permissions(manage_messages = True,manage_channels = True)
+@commands.guild_only()
 async def ZaWarudo(ctx,*,Tiempo :int = 0):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
     await ctx.send('https://i.pinimg.com/originals/af/c8/7b/afc87b53146aaeaf78eaad0bb50fd8a2.gif')
@@ -123,6 +146,8 @@ async def ZaWarudo(ctx,*,Tiempo :int = 0):
 
 @bot.command(aliases=['SAW','Soft'])
 @commands.has_permissions(manage_roles = True)
+@commands.bot_has_permissions(manage_channels = True)
+@commands.guild_only()
 async def SoftAndWet(ctx, member: discord.Member):
     for canal in ctx.guild.text_channels:
         await canal.set_permissions(member,send_messages=False,add_reactions = False )
@@ -131,6 +156,8 @@ async def SoftAndWet(ctx, member: discord.Member):
 
 @bot.command(aliases=['um'])
 @commands.has_permissions(manage_roles = True)
+@commands.bot_has_permissions(manage_roles = True)
+@commands.guild_only()
 async def Unmute(ctx, member: discord.Member):
     for canal in ctx.guild.text_channels:
         await canal.set_permissions(member,send_messages = True,add_reactions = True )
@@ -139,6 +166,8 @@ async def Unmute(ctx, member: discord.Member):
 
 @bot.command(aliases=['SP'])
 @commands.has_permissions(manage_roles = True,send_messages = True)
+@commands.bot_has_permissions(manage_messages = True, manage_channels = True)
+@commands.guild_only()
 async def StarPlatinum(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
@@ -160,6 +189,7 @@ async def Dio(ctx):
     
 
 @bot.command(aliases=['Re'])
+@commands.guild_only()
 async def Requiem(ctx):
     e = ctx.guild.emojis
     await ctx.send(rd.choice(e).url)
@@ -210,6 +240,8 @@ async def KillerQueen(ctx):
 
 @bot.command(aliases=['btd'])
 @commands.has_permissions(manage_messages = True)
+@commands.bot_has_permissions(manage_messages = True)
+@commands.guild_only()
 async def BitesTheDust(ctx,numero:int = 1):
     await ctx.channel.purge(limit = numero + 1)
     await ctx.channel.send(f'{numero} Mensaje(s) ha(n) mordido el polvo' + ' https://i.pinimg.com/originals/87/9b/5e/879b5e50c9c11adc45aab6ed097943e1.gif')
@@ -217,12 +249,17 @@ async def BitesTheDust(ctx,numero:int = 1):
 
 @bot.command(aliases=['EC'])
 @commands.has_permissions(manage_messages = True, manage_channels = True)
+@commands.bot_has_permissions(manage_messages = True, manage_channels = True)
+@commands.guild_only()
 async def Echoes(ctx,numero:int = 0):
     await ctx.channel.edit(slowmode_delay = numero)
     await ctx.send('https://media1.tenor.com/images/75eb465558d8e2fed82366f81bece938/tenor.gif?itemid=17841933')
 
 
 @bot.command()
+@commands.cooldown(rate = 1,per = 4.0, type = commands.BucketType.channel)
+@commands.max_concurrency(number = 2, per = commands.BucketType.guild)
+@commands.guild_only()
 async def Stats(ctx, *, member: discord.Member = None):
     async with ctx.channel.typing():
         if not member:
@@ -277,6 +314,9 @@ async def on_message_delete(message):
     mensaje_borrado = message
 '''
 @bot.command(aliases=['A'])
+@commands.cooldown(rate = 1,per = 1.5, type = commands.BucketType.guild)
+@commands.max_concurrency(number = 5, per = commands.BucketType.guild)
+@commands.guild_only()
 async def Ability(ctx):
     color = discord.Colour.random()
     info = await url.get_info()
@@ -309,6 +349,8 @@ async def on_member_remove(member):
 async def on_command_error(ctx,error):
     if isinstance(error,commands.BotMissingPermissions):
         await ctx.send(f"{ctx.author.mention} No tengo permisos para usar este stand")
+    elif isinstance(error,commands.NoPrivateMessage):
+        await ctx.reply('Este Stand no se puede usar en mensajes privados')
     elif isinstance(error,commands.MissingPermissions):
         await ctx.send(f"{ctx.author.mention} No tienes el poder de usar este Stand")
         await ctx.message.delete()
@@ -318,6 +360,8 @@ async def on_command_error(ctx,error):
         await ctx.send(f"{ctx.author.mention} Te has equivocado al invocar este Stand")
     elif isinstance(error,commands.MemberNotFound):
         await ctx.send(f"{ctx.author.mention} Este no es un miembro valido")
+    elif isinstance(error,commands.CommandOnCooldown):
+        await ctx.reply('Este Stand se esta recargando')
     else:
         raise error
 
