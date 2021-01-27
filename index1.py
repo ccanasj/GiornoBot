@@ -8,6 +8,7 @@ import googletrans as gt
 from io import BytesIO
 import test
 import url
+import time
 
 punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
          3: 'A voluntad del usuario', 4: 'Con Un arma', 5: 'Abriendo algo',
@@ -41,7 +42,7 @@ for r in range(5):
 async def help(ctx):
     embed = discord.Embed(color = discord.Colour.gold())
     embed.set_author(name = 'Jojo Bot comandos',icon_url = bot.user.avatar_url)
-    embed.add_field(name="**__Moderacion__**", value='BitesTheDust \nEchoes \nStarPlatinum \nZaWarudo \nSoftAndWet \nUnmute (De momento xd)')
+    embed.add_field(name="**__Moderacion__**", value='BitesTheDust \nEchoes \nStarPlatinum \nZaWarudo \nSoftAndWet \nKingCrimsom \nD4C \nUnmute (De momento xd)')
     embed.add_field(name="**__Entretenimiento__**", 
     value='Ability \nDio \nKillerQueen \nMoodyBlues \nRequiem \nStand \nStandAvatar \nStats \nZahando \nKakyoin (En progreso xd)')
     embed.set_footer(text = 'Para ver un comando en especifico pon $help <Nombre Comando>')
@@ -62,8 +63,8 @@ async def MoodyBlues(ctx):
     except asyncio.TimeoutError:
         pass
     else:
-        await a.clear_reactions()
         await a.edit(embed = Contenidos[0])
+        await a.clear_reactions()
         await a.add_reaction('⬅️')
         await a.add_reaction('➡️')
         await Lenguajes(a,ctx.author,0)
@@ -89,6 +90,9 @@ async def Lenguajes(message,author,Pagina_Actual):
             await message.edit(embed = Contenidos[Pagina_Actual])
             await Lenguajes(message,author,Pagina_Actual)
 
+
+#------------------------------------------------------------------------------------#
+
 @bot.command(aliases=['Moody','MB'])
 async def MoodyBlues(ctx,lang,*,oracion):
     if lang not in gt.LANGUAGES:
@@ -107,7 +111,7 @@ async def printer(ctx,emb):
 @commands.guild_only()
 async def Test(ctx):
     guild = ctx.guild
-    paginator = commands.Paginator(prefix='*',suffix='*',max_size=2000)
+    paginator = commands.Paginator(max_size=40)
     for role in guild.roles:
         paginator.add_line(role.name + ' ' + str(role.id))
     for page in paginator.pages:
@@ -130,9 +134,9 @@ async def Kakyoin(ctx,*,busqueda):
 
 
 @bot.command(aliases=['ZW'])
+@commands.guild_only()
 @commands.has_permissions(manage_roles = True,send_messages = True)
 @commands.bot_has_permissions(manage_messages = True,manage_channels = True)
-@commands.guild_only()
 async def ZaWarudo(ctx,*,Tiempo :int = 0):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
     await ctx.send('https://i.pinimg.com/originals/af/c8/7b/afc87b53146aaeaf78eaad0bb50fd8a2.gif')
@@ -145,9 +149,9 @@ async def ZaWarudo(ctx,*,Tiempo :int = 0):
 
 
 @bot.command(aliases=['SAW','Soft'])
+@commands.guild_only()
 @commands.has_permissions(manage_roles = True)
 @commands.bot_has_permissions(manage_channels = True)
-@commands.guild_only()
 async def SoftAndWet(ctx, member: discord.Member):
     for canal in ctx.guild.text_channels:
         await canal.set_permissions(member,send_messages=False,add_reactions = False )
@@ -155,9 +159,9 @@ async def SoftAndWet(ctx, member: discord.Member):
 
 
 @bot.command(aliases=['um'])
+@commands.guild_only()
 @commands.has_permissions(manage_roles = True)
 @commands.bot_has_permissions(manage_roles = True)
-@commands.guild_only()
 async def Unmute(ctx, member: discord.Member):
     for canal in ctx.guild.text_channels:
         await canal.set_permissions(member,send_messages = True,add_reactions = True )
@@ -165,9 +169,9 @@ async def Unmute(ctx, member: discord.Member):
 
 
 @bot.command(aliases=['SP'])
+@commands.guild_only()
 @commands.has_permissions(manage_roles = True,send_messages = True)
 @commands.bot_has_permissions(manage_messages = True, manage_channels = True)
-@commands.guild_only()
 async def StarPlatinum(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
@@ -179,7 +183,7 @@ async def Dio(ctx):
     ctx1 = await ctx.send('Jotaro')
     await ctx1.add_reaction("a:Menacing:799687232344686654")
     def check(reaction, user):
-        return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'
+        return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'  or str(reaction.emoji) == '<a:Menacing:799687232344686654>'
     try:
         reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
     except asyncio.TimeoutError:
@@ -239,27 +243,46 @@ async def KillerQueen(ctx):
 
 
 @bot.command(aliases=['btd'])
+@commands.guild_only()
 @commands.has_permissions(manage_messages = True)
 @commands.bot_has_permissions(manage_messages = True)
-@commands.guild_only()
 async def BitesTheDust(ctx,numero:int = 1):
     await ctx.channel.purge(limit = numero + 1)
-    await ctx.channel.send(f'{numero} Mensaje(s) ha(n) mordido el polvo' + ' https://i.pinimg.com/originals/87/9b/5e/879b5e50c9c11adc45aab6ed097943e1.gif')
+    await ctx.channel.send(f'{numero} Mensaje(s) ha(n) mordido el polvo https://i.pinimg.com/originals/87/9b/5e/879b5e50c9c11adc45aab6ed097943e1.gif')
 
 
 @bot.command(aliases=['EC'])
+@commands.guild_only()
 @commands.has_permissions(manage_messages = True, manage_channels = True)
 @commands.bot_has_permissions(manage_messages = True, manage_channels = True)
-@commands.guild_only()
 async def Echoes(ctx,numero:int = 0):
     await ctx.channel.edit(slowmode_delay = numero)
     await ctx.send('https://media1.tenor.com/images/75eb465558d8e2fed82366f81bece938/tenor.gif?itemid=17841933')
 
+@bot.command(aliases=['KC'])
+@commands.guild_only()
+@commands.has_permissions(ban_members = True)
+@commands.bot_has_permissions(ban_members = True)
+async def KingCrimson(ctx,member: discord.Member = None, *, reason:str = 'Sin razon dada'):
+    ctx1 = await ctx.send(f'He usado la habilidad de King Crimson y he visto como en los proximos 10 segundos eres baneado de {member.guild.name}')
+    ctx2 = await ctx.send('https://64.media.tumblr.com/d94e51eba93af9499a536e50b590412b/tumblr_pt3o4ebrOm1tqvsfso3_500.gif')
+    await asyncio.sleep(10)
+    await ctx1.edit(content = f'{member.name} tu existencia ha sido borrada de este server')
+    await ctx2.edit(content = 'https://media1.tenor.com/images/9899303e9a88ccdcb92c935568bc0e23/tenor.gif?itemid=14907260')
+    await member.ban(reason = reason)
+
+@bot.command(aliases=['DirtyDeedsDoneDirtCheap'])
+@commands.guild_only()
+@commands.has_permissions(kick_members = True)
+@commands.bot_has_permissions(kick_members = True)
+async def D4C(ctx,member: discord.Member = None, *, reason:str = 'Sin razon dada'):
+    await ctx.send('https://thumbs.gfycat.com/SourPointedHackee-size_restricted.gif')
+    await member.kick(reason = reason)
 
 @bot.command()
-@commands.cooldown(rate = 1,per = 4.0, type = commands.BucketType.channel)
-@commands.max_concurrency(number = 2, per = commands.BucketType.guild)
 @commands.guild_only()
+@commands.cooldown(rate = 1,per = 2.5, type = commands.BucketType.channel)
+@commands.max_concurrency(number = 3, per = commands.BucketType.guild)
 async def Stats(ctx, *, member: discord.Member = None):
     async with ctx.channel.typing():
         if not member:
@@ -270,8 +293,13 @@ async def Stats(ctx, *, member: discord.Member = None):
             stand = 'Sin stand'
         asset = member.avatar_url_as(size=256)
         pfp = BytesIO(await asset.read())
-        test.Fondo(nombre= nombre,nick= stand,data=pfp)
-        await ctx.send(file = discord.File('./Imagenes/XD.jpg'))
+        Imagen = test.Fondo(nombre= nombre,nick= stand,data=pfp)
+        arr = BytesIO()
+        Imagen.save(arr, format='JPEG')
+        arr.seek(0)
+        await ctx.send(file = discord.File(arr, 'Stats.png'))
+        arr.close()
+
 '''
 @bot.command()
 async def Sticky(ctx):
@@ -314,9 +342,9 @@ async def on_message_delete(message):
     mensaje_borrado = message
 '''
 @bot.command(aliases=['A'])
+@commands.guild_only()
 @commands.cooldown(rate = 1,per = 1.5, type = commands.BucketType.guild)
 @commands.max_concurrency(number = 5, per = commands.BucketType.guild)
-@commands.guild_only()
 async def Ability(ctx):
     color = discord.Colour.random()
     info = await url.get_info()
@@ -329,6 +357,8 @@ async def Ability(ctx):
     embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
     embedVar.add_field(name='Limitacion',value=info[3])
     await ctx.send(embed=embedVar)
+
+#------------------------------------------------------------------------------------#
 
 @bot.event
 async def on_member_join(member):
@@ -362,6 +392,8 @@ async def on_command_error(ctx,error):
         await ctx.send(f"{ctx.author.mention} Este no es un miembro valido")
     elif isinstance(error,commands.CommandOnCooldown):
         await ctx.reply('Este Stand se esta recargando')
+    elif isinstance(error,commands.MaxConcurrencyReached):
+        await ctx.reply('Muchas personas estan usando este Stand en el server, intetalo despues')
     else:
         raise error
 

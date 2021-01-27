@@ -41,7 +41,7 @@ def Fondo(nombre, nick, data):
         Back.paste(pfp,(750,115),mask = pfp)
     except:
         Back.paste(pfp,(750,115))
-    Back.save('./Imagenes/XD.jpg')
     buf.close()
+    return Back
 
 
