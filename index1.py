@@ -118,6 +118,7 @@ async def Test(ctx):
         await ctx.send(embed= discord.Embed(color= discord.Color.blurple(),description=page)) 
     #printer.start(ctx,emb)
 
+'''
 @bot.command(aliases=['K'])
 @commands.guild_only()
 async def Kakyoin(ctx,*,busqueda):
@@ -130,8 +131,12 @@ async def Kakyoin(ctx,*,busqueda):
                     await ctx.send(a['path'])
                 except:
                     await ctx.reply(f' No encontre la busqueda: {busqueda}')
-                
+'''       
 
+@bot.command(aliases=['K'])
+@commands.guild_only()
+async def Kakyoin(ctx):
+    await ctx.send(url.Animes())
 
 @bot.command(aliases=['ZW'])
 @commands.guild_only()
@@ -183,7 +188,7 @@ async def Dio(ctx):
     ctx1 = await ctx.send('Jotaro')
     await ctx1.add_reaction("a:Menacing:799687232344686654")
     def check(reaction, user):
-        return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'  or str(reaction.emoji) == '<a:Menacing:799687232344686654>'
+        return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'
     try:
         reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
     except asyncio.TimeoutError:
