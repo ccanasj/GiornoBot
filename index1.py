@@ -133,11 +133,32 @@ async def Kakyoin(ctx,*,busqueda):
                     await ctx.reply(f' No encontre la busqueda: {busqueda}')
 '''       
 
+@bot.command()
+@commands.guild_only()
+async def B(ctx,*,busqueda:str):
+    resultados = url.Anime2(busqueda=busqueda)['results']
+    Embed = discord.Embed(title = resultados[0]['title'],color = discord.Colour.random())
+    Embed.add_field(name='Sinopsis',value=resultados[0]['synopsis'])
+    Embed.set_image(url = resultados[0]['image_url'])
+    await ctx.send(embed = Embed)
+
 @bot.command(aliases=['K'])
 @commands.guild_only()
-async def Kakyoin(ctx):
-    await ctx.send(url.Animes())
-
+async def Kakyoin(ctx,*,busqueda:str):
+    resultado = url.Animes(busqueda = busqueda)['data']['Page']['media']
+    Embed = discord.Embed(color = discord.Colour.random())
+    a = 1
+    c = ''
+    for res in resultado:
+        b = res['title']['english']
+        if b == None:
+            b = res['title']['romaji']
+        c += f'{a} - {b} \n'
+        a += 1
+    Embed.add_field(name = 'Animes',value = c, inline=False)
+    Embed.set_author(name = ctx.author.name, icon_url= ctx.author.avatar_url)
+    await ctx.send(embed = Embed)
+    
 @bot.command(aliases=['ZW'])
 @commands.guild_only()
 @commands.has_permissions(manage_roles = True,send_messages = True)

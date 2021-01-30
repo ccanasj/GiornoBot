@@ -22,26 +22,41 @@ async def get_info():
         info_ability = translator.translate(f'{ability}_{abilityname}',src='en',dest = 'es').text.split('_')
         return [Standname,info_ability[1],info_ability[0],limitation]
 
-def Animes():
+def Animes(busqueda):
     query = '''
-    query ($id: Int) { # Define which variables will be used in the query (id)
-    Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-        id
-        title {
-        romaji
-        english
-        native
+    query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+        Page (page: $page, perPage: $perPage) {
+            pageInfo {
+                total
+                currentPage
+                lastPage
+                hasNextPage
+                perPage
+            }
+            media (id: $id, search: $search, type: ANIME) {
+                id
+                title {
+                    romaji
+                    english
+                }
+            }
         }
-    }
     }
     '''
     variables = {
-        'title':'Naruto'
+        'search': busqueda,
+        'page': 1,
+        'perPage': 5
     }
-
     url = 'https://graphql.anilist.co'
 
     response = requests.post(url, json={'query': query, 'variables': variables})
     return response.json()
 
+def Anime2(busqueda):
+    url = f"https://api.jikan.moe/v3/search/anime?q={busqueda}&limit=3"
+
+    response = requests.get(url)
+    print(response.json())
+    return response.json()
 
