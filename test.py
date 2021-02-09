@@ -5,9 +5,10 @@ import random as rd
 from io import BytesIO
 from PIL import Image,ImageFont,ImageDraw
 
-font = ImageFont.truetype('./Fuentes/SF Fedora.ttf', 35)
+font = ImageFont.truetype('./Fuentes/SF Fedora.ttf', 45)
 categories = ['Vel','Poder','Potencia',' Pre','Duracion','Rango']
 N = len(categories)
+fondo = open('./Imagenes/2-1.jpg','rb')
 
 angles = [n / float(N) * 2 * pi for n in range(N)]
 angles += angles[:1]
@@ -15,7 +16,6 @@ angles += angles[:1]
 def Fondo(nombre, nick, data):
     values = [rd.randint(1,5) for i in range(6)]
     values += values[:1]
-
     fig = plt.figure(figsize=(5,5),constrained_layout = True)
     ax = plt.subplot(polar = "True")
 
@@ -31,16 +31,17 @@ def Fondo(nombre, nick, data):
     plt.savefig(buf, bbox_inches='tight',transparent = True)
     buf.seek(0)
     Stats = Image.open(buf)
-    Back = Image.open('./Imagenes/2-1.jpg')
+    a = fondo
+    Back = Image.open(a)
     Back.paste(Stats,(5,220), mask=Stats)
     draw = ImageDraw.Draw(Back)
-    draw.text((50,130),nick,(231,228,217),font = font)
+    draw.text((65,130),nick,(231,228,217),font = font)
     draw.text((730,610),nombre,(231,228,217),font = font)
     pfp = Image.open(data)
     try:
-        Back.paste(pfp,(750,115),mask = pfp)
+        Back.paste(pfp,(800,130),mask = pfp)
     except:
-        Back.paste(pfp,(750,115))
+        Back.paste(pfp,(800,130))
     buf.close()
     return Back
 
