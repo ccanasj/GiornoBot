@@ -10,3 +10,4 @@ beautifulsoup4==4.9.3
 discord==1.0.1
 Pillow==8.1.0
 pymongo
+dnspython==2.1.0
