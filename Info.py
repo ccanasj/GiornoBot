@@ -4,7 +4,7 @@ import random as rd
 import pymongo
 from pymongo import MongoClient
 
-cluster = MongoClient("MONGODB_URI")
+cluster = MongoClient("mongodb+srv://Catmi:EvhlQlj59QsRdEHx@botdata.olbzz.mongodb.net/test")
 
 db = cluster["PlayerData"]
 collections = db["StandInfo"]
