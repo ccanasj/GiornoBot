@@ -8,6 +8,7 @@ from io import BytesIO
 import aiohttp
 import url
 import test
+import Info
 
 translator = Translator()
 format = "%Y/%w/%d \n %H:%M:%S"
@@ -105,10 +106,12 @@ class Fun(commands.Cog):
             if not member:
                 member = ctx.message.author
             nombre = member.name
-            stand  = await url.nombre()
+            datos = await Info.GetInfo(member)
+            stand = datos[0]
+            values = datos[1]
             asset = member.avatar_url_as(size=256)
             pfp = BytesIO(await asset.read())
-            Imagen = test.Fondo(nombre= nombre,nick= stand,data=pfp)
+            Imagen = test.Fondo(nombre= nombre,nick= stand,data=pfp,values = values)
             arr = BytesIO()
             Imagen.save(arr, format='JPEG')
             arr.seek(0)
@@ -142,49 +145,76 @@ class Fun(commands.Cog):
     async def Ability(self,ctx):
         color = discord.Colour.random()
         info = await url.get_info()
+        datos = await Info.GetInfo(ctx.author)
+        stand = datos[0]
         embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
         embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
-        embedVar.add_field(name='『Nombre Stand』',value=info[0])
-        embedVar.add_field(name='Nombre Habilidad',value=info[1])
+        embedVar.add_field(name='『Nombre Stand』',value=stand)
+        embedVar.add_field(name='Nombre Habilidad',value=info[0])
         embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
-        embedVar.add_field(name='Descripcion',value=info[2], inline=False)
+        embedVar.add_field(name='Descripcion',value=info[1], inline=False)
         embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
-        embedVar.add_field(name='Limitacion',value=info[3])
+        embedVar.add_field(name='Limitacion',value=info[2])
         await ctx.send(embed=embedVar)
 
+
     @commands.command()
+    @commands.cooldown(rate = 1,per = 10, type = commands.BucketType.user)
+    async def Arrow(self,ctx):
+        stand  = await url.nombre()
+        values = [rd.randint(1,5) for i in range(6)]
+        await Info.Guardar(user = ctx.author, atributos = values, stand = stand)
+        await ctx.send('https://media1.tenor.com/images/36d30efef07ecae295d330588618fc8b/tenor.gif?itemid=14490536')
+
+
+    @commands.command(aliases=['J'])
     async def Jotaro(self,ctx):
-        await ctx.message.add_reaction(":Planmalo:799402450431115287")
+        await ctx.send(f'{round(self.bot.latency, 3)} ms')
         ctx1 = await ctx.send('Dio')
         await ctx1.add_reaction("a:Menacing:799687232344686654")
         def check(reaction, user):
-            return user == ctx.author and str(reaction.emoji) == '<:Planmalo:799402450431115287>'
+            return user == ctx.author and str(reaction.emoji) == '<a:Menacing:799687232344686654>'
         try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=30.0, check=check)
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=10.0, check=check)
         except asyncio.TimeoutError:
-            await ctx.send('https://i.ytimg.com/vi/t3S0PR8_C2w/maxresdefault.jpg')
+            pass
         else:
             await ctx.send('https://i.kym-cdn.com/photos/images/newsfeed/001/488/696/0e7.jpg')
         
 
+    '''
+    @commands.command(aliases=['CJ'])
+        @commands.guild_only()
+        async def CocoJumbo(self,ctx,*,emoji : discord.Emoji = None):
+            if not emoji:
+                e = ctx.guild.emojis
+                await ctx.send(rd.choice(e))
+            else:
+                await ctx.send(emoji.url)
+    '''
+        
     @commands.command(aliases=['CJ'])
     @commands.guild_only()
-    async def CocoJumbo(self,ctx,*,emoji : discord.Emoji = None):
-        if not emoji:
-            e = ctx.guild.emojis
-            await ctx.send(rd.choice(e))
+    async def CocoJumbo(self,ctx,*,message :str = None):
+        emojis = ctx.guild.emojis
+        if not message:
+            await ctx.send(rd.choice(emojis))
         else:
-            await ctx.send(emoji.url)
-
+            for emoji in emojis:
+                if emoji.name in message:
+                    await ctx.send(emoji.url)
 
     @commands.command()
     async def Stand(self,ctx, *, member: discord.Member = None):
         if not member:
             member = ctx.message.author
         userAvatar = member.avatar_url
+        datos = await Info.GetInfo(member)
+        stand = datos[0]
+        values = datos[1]
         color = discord.Colour.random()
-        embedVar = discord.Embed(title="Perfil", description="Posible stand master", color = color)
-        embedVar.add_field(name="Nombre", value=member.name)
+        embedVar = discord.Embed(title="Stand", description= f'『{stand}』', color = color)
+        embedVar.add_field(name="Nombre usuario", value=member.name)
         embedVar.add_field(name="Alias", value=member.nick)
         embedVar.add_field(name="Se unio el", value=member.joined_at.strftime(format))
         embedVar.add_field(name="Rol mas alto", value= member.top_role)
@@ -194,6 +224,7 @@ class Fun(commands.Cog):
         else:
             embedVar.add_field(name="Actividad", value= actividad.name)
         embedVar.set_image(url=userAvatar)
+        embedVar.add_field(name="Atributos Stand", value= values)
         await ctx.send(embed=embedVar)
 
 
@@ -207,7 +238,7 @@ class Fun(commands.Cog):
                     userAvatar = user.avatar_url
                     await ctx.send(userAvatar)
 
-    @commands.command(aliases = ['J'])
+    @commands.command(aliases = ['JJ'])
     async def Joseph(self,ctx):
         message = await ctx.send('Lo proximo que diras es: ')
         def check(message):
@@ -215,14 +246,9 @@ class Fun(commands.Cog):
         try:
             messageUser = await self.bot.wait_for('message', timeout=30.0, check=check)
         except asyncio.TimeoutError:
-            await ctx.send('No te puedo esperara todo el dia')
+            await ctx.send('No te puedo esperar todo el dia')
         else:
             await message.edit(content = f'Lo proximo que diras es: {messageUser.content}' )
-
-    @commands.command()
-    async def Si(self,ctx):
-        nombre = await url.nombre()
-        await ctx.send(nombre)
 
     @commands.command(aliases=['KQueen','KQ'])
     async def KillerQueen(self,ctx):

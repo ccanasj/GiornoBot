@@ -21,17 +21,17 @@ for r in range(5):
 class Help(commands.Cog):
 
     def __init__(self,bot):
-        self.bot = bot
+        self.bot = bot 
     
     @commands.group(invoke_without_command = True, case_insensitive = True)
     async def help(self,ctx):
         embed = discord.Embed(color = discord.Colour.gold())
-        embed.set_author(name = 'Jojo Bot comandos',icon_url = self.bot.user.avatar_url)
+        embed.set_author(name = 'Giorno-Bot comandos',icon_url = self.bot.user.avatar_url)
         embed.add_field(name="**__Moderacion__**",
-        value='BitesTheDust \nEchoes \nStarPlatinum \nZaWarudo \nSoftAndWet \nKingCrimson \nD4C \nUnmute (De momento xd)')
+        value='BitesTheDust \nEchoes \nStarPlatinum \nZaWarudo \nSoftAndWet \nKingCrimson \nD4C \nUnmute (De momento xd) \nChangePrefix \nSetWelcomeChannel')
         embed.add_field(name="**__Entretenimiento__**", 
-        value='Ability \nJotaro \nKillerQueen \nMoodyBlues \nCocoJumbo \nStand \nStandAvatar \nStats \nZahando \nBohemianRhapsody')
-        embed.set_footer(text = 'Para ver un comando en especifico pon $help <Nombre Comando> \nLo que este entre <> es opcional, lo que este en [] es necesario completar')
+        value='Ability \nJotaro \nKillerQueen \nMoodyBlues \nCocoJumbo \nStand \nStandAvatar \nStats \nZahando \nBohemianRhapsody \nArrow')
+        embed.set_footer(text = 'Para ver un comando en especifico pon [Prefijo] help <Nombre Comando>\n¡Para ver el prefijo de este server mencioname! \nLo que este entre <> es opcional, lo que este en [] es necesario completar')
         await ctx.send(embed = embed)
 
     @help.command(aliases=['A'])

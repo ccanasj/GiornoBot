@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
+import Info
 
 class Moderation(commands.Cog):
     
@@ -12,39 +13,55 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_roles = True,send_messages = True)
     @commands.bot_has_permissions(manage_messages = True,manage_channels = True)
     async def ZaWarudo(self,ctx,*,Tiempo :int = 0):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await ctx.channel.set_permissions(ctx.guild.default_role,add_reactions = False, send_messages=False)
         await ctx.send('https://i.pinimg.com/originals/af/c8/7b/afc87b53146aaeaf78eaad0bb50fd8a2.gif')
         if Tiempo > 0:
             await asyncio.sleep(Tiempo)
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+            await ctx.channel.set_permissions(ctx.guild.default_role,add_reactions = True, send_messages=True)
             await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
         if Tiempo < 0:
             await ctx.reply('No tengo el poder de manejar el tiempo negativo')
 
-    @commands.command(aliases=['SAW','Soft'])
+    @commands.command(aliases=['SAW'])
     @commands.guild_only()
     @commands.has_permissions(manage_roles = True)
-    @commands.bot_has_permissions(manage_channels = True)
+    @commands.bot_has_permissions(manage_roles = True)
     async def SoftAndWet(self,ctx, member: discord.Member):
-        for canal in ctx.guild.text_channels:
-            await canal.set_permissions(member,send_messages=False,add_reactions = False )
+        for channel in ctx.guild.channels:
+            await channel.set_permissions(member, add_reactions = False, send_messages=False)
         await ctx.send('https://i.imgur.com/fSgLRTW.gif')
+        '''guild = ctx.guild
+        rol = await Info.GetInfoGuild(guild = guild)
+        MutedRole = guild.get_role(rol[2])
+        if not MutedRole:
+            await ctx.reply('Aun no se ha creado o asignado un rol para los ususarios muteados')
+        else:
+            await member.add_roles(MutedRole,reason = reason)
+            await ctx.send('https://i.imgur.com/fSgLRTW.gif')'''
 
     @commands.command(aliases=['um'])
     @commands.guild_only()
     @commands.has_permissions(manage_roles = True)
     @commands.bot_has_permissions(manage_roles = True)
     async def Unmute(self,ctx, member: discord.Member):
-        for canal in ctx.guild.text_channels:
-            await canal.set_permissions(member,send_messages = True,add_reactions = True )
+        for channel in ctx.guild.channels:
+            await channel.set_permissions(member, overwrite=None)
         await ctx.send(f'{member.mention} Ya podes hablar')
+        '''guild = ctx.guild
+        rol = await Info.GetInfoGuild(guild = guild)
+        MutedRole = guild.get_role(rol[2])
+        if not MutedRole:
+            await ctx.reply('Aun no se ha creado o asignado un rol para los ususarios muteados')
+        else:
+            await member.remove_roles(MutedRole,reason = reason)
+            await ctx.send(f'{member.mention} Ya podes hablar')'''
 
     @commands.command(aliases=['SP'])
     @commands.guild_only()
     @commands.has_permissions(manage_roles = True,send_messages = True)
     @commands.bot_has_permissions(manage_messages = True, manage_channels = True)
     async def StarPlatinum(self,ctx):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+        await ctx.channel.set_permissions(ctx.guild.default_role,add_reactions = True ,send_messages=True)
         await ctx.send('https://i.pinimg.com/originals/02/c6/8c/02c68c840e943c4aa2ebfdb7c8a6ea46.gif')
 
     @commands.command(aliases=['btd'])
@@ -85,6 +102,41 @@ class Moderation(commands.Cog):
     async def D4C(self,ctx,member: discord.Member, *, reason:str = 'Sin razon dada'):
         await ctx.send('https://thumbs.gfycat.com/SourPointedHackee-size_restricted.gif')
         await member.kick(reason = reason)
+
+    @commands.command(aliases=['ChanPre'])
+    @commands.guild_only()
+    @commands.has_permissions(administrator = True)
+    async def ChangePrefix(self,ctx,*,prefix):
+        if len(prefix) > 4:
+            await ctx.reply('Asi te queria agarrar Esteban <a:Putazos:803782108430467122>')
+        else:
+            await Info.SetPrefix(guild = ctx.guild,prefix = prefix)
+            await ctx.reply(f'El prefijo se ha cambiado por: {prefix}')
+
+    @commands.command(aliases=['SWC'])
+    @commands.guild_only()
+    @commands.has_permissions(manage_channels = True)
+    async def SetWelcomeChannel(self,ctx,channel :discord.TextChannel):
+        await Info.SetChannel(guild = ctx.guild,channel = channel.id)
+        await ctx.reply(f'El canal de bienvenida se ha actualizado correctamente a: {channel.mention}')
+
+    '''@commands.command(aliases=['SMR'])
+    @commands.guild_only()
+    @commands.has_permissions(administrator = True)
+    async def SetMutedRol(self,ctx,mRol):
+        for rol in ctx.guild.roles:
+            if mRol in rol.name or int(mRol) == rol.id:
+                await Info.SetRol(guild = ctx.guild, rol = rol.id)
+                await ctx.reply(f'El rol {rol.mention} ha sido asignado como el rol para lo usurios muteados')'''
+
+    '''@commands.command(aliases=['CMR'])
+    @commands.guild_only()
+    @commands.has_permissions(administrator = True)
+    async def CreateMutedRol(self,ctx,mRol):
+        guild = ctx.guild
+        await guild.create_role(name = mRol)
+        await ctx.reply(f'Se creo el rol {mRol} para los usuarios muteados')'''
+        
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

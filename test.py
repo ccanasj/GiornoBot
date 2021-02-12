@@ -13,8 +13,8 @@ fondo = open('./Imagenes/2-1.jpg','rb')
 angles = [n / float(N) * 2 * pi for n in range(N)]
 angles += angles[:1]
 
-def Fondo(nombre, nick, data):
-    values = [rd.randint(1,5) for i in range(6)]
+def Fondo(nombre, nick, data, values):
+    
     values += values[:1]
     fig = plt.figure(figsize=(5,5),constrained_layout = True)
     ax = plt.subplot(polar = "True")
@@ -36,7 +36,7 @@ def Fondo(nombre, nick, data):
     Back.paste(Stats,(5,220), mask=Stats)
     draw = ImageDraw.Draw(Back)
     draw.text((65,130),nick,(231,228,217),font = font)
-    draw.text((730,610),nombre,(231,228,217),font = font)
+    draw.text((700,610),nombre,(231,228,217),font = font)
     pfp = Image.open(data)
     try:
         Back.paste(pfp,(800,130),mask = pfp)
