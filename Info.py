@@ -12,29 +12,60 @@ collections = db["StandInfo"]
 dbg = cluster["GuildData"]
 guilds = dbg["Guild"]
 
-async def Guardar(user,atributos,stand):
+startInventory={'Flint':0,
+                'Stick':0,
+                'Feather':0,
+                'Golden Flint':0,
+                'Diamond Stick':0,
+                'Golden Feather':0,
+                'Arrow Stand':0,
+                'Arrow Stand Requiem':0}
+
+async def GuardarUsuario(user,atributos,stand,stats):
     myquery = { "_id": user.id }
-    if (collections.count_documents(myquery) == 0):
-        post = {"_id": user.id, "stand": stand, "stats": atributos}
-        collections.insert_one(post)
-    else:
-        collections.update_one({"_id":user.id}, {"$set":{"stand":stand,"stats": atributos}})
+    post = {"_id": user.id, "stand":stand,"atributo": atributos,"stats": stats,"inventario": startInventory}
+    collections.insert_one(post)
+
+async def Existe(user):
+    myquery = { "_id": user.id }
+    return collections.count_documents(myquery) != 0
+
+async def GuardarStand(user,atributos,stand,stats,objeto):
+    myquery = { "_id": user.id }
+    collections.update_one(myquery, {"$set":{"stand":stand,"atributo": atributos,"stats": stats},"$inc":{f"inventario.{objeto}":-1}})
+
+async def GuardarObjeto(user,objeto,cantidad):
+    collections.update_one({ "_id": user.id }, {"$inc":{f"inventario.{objeto}":cantidad}})
+    
+async def GuardarInventario(user,inventario):
+    collections.update_one({ "_id": user.id }, {"$set":{"inventario":inventario}})
+
+async def GetObjetos(user):
+    data = collections.find_one({ "_id": user.id})
+    return data['inventario']
+
+async def EnBatalla(retador,desafiado,EnBatalla):
+    myquery = { "_id": retador.id,"_id": desafiado.id }
+    collections.update_many({ "_id": retador.id,"_id": desafiado.id },{"$set":{"EnBatalla":EnBatalla}})
 
 async def GetInfo(user):
     myquery = { "_id": user.id }
-    mydoc = collections.find(myquery)
-    for result in mydoc:
+    if (collections.count_documents(myquery) != 0):
+        result = collections.find_one(myquery)
+        atributos = result['atributo']
         stand = result['stand']
         stats = result['stats']
-    return [stand,stats]
+        #EnBatalla = result['EnBatalla'] ,EnBatalla
+        return [stand,atributos,stats]
+    else:
+        return None
 
 async def GetInfoGuild(guild):
     myquery = { "_id": guild.id }
-    mydoc = guilds.find(myquery)
-    for result in mydoc:
-        prefix = result['prefix']
-        channel = result['channel']
-        #rol = result['rol']
+    result = guilds.find_one(myquery)
+    prefix = result['prefix']
+    channel = result['channel']
+    #rol = result['rol']
     return [prefix,channel]
 
 async def GuardarGuild(guild,prefix,channel):
@@ -42,8 +73,6 @@ async def GuardarGuild(guild,prefix,channel):
     if (guilds.count_documents(myquery) == 0):
         post = {"_id": guild.id,"prefix": prefix, "channel": channel}
         guilds.insert_one(post)
-    else:
-        guilds.update_one({"_id":guild.id}, {"$set":{"prefix": prefix, "channel": channel}})
 
 async def SetPrefix(guild,prefix):
     guilds.update_one({"_id":guild.id}, {"$set":{"prefix": prefix}})

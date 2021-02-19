@@ -3,12 +3,8 @@ from bs4 import BeautifulSoup
 from googletrans import Translator
 import asyncio
 import urllib
-import random as rd
 
 translator = Translator()
-
-nombres = ['http://names.drycodes.com/1?separator=space&nameOptions=objects',
-           'http://names.drycodes.com/1?separator=space&nameOptions=funnyWords']
 
 async def get_info():
     abilitys = requests.get('https://powerlisting.fandom.com/wiki/Special:Random')
@@ -66,6 +62,8 @@ async def Animes(busqueda):
     return response.json()
 
 async def nombre():
-    response = requests.get(rd.choice(nombres))
-    return response.json()[0]
+    names = requests.get('http://www.tunevault.com/band-name-generator')
+    soup = BeautifulSoup(names.content, 'html.parser')
+    name = soup.findAll("span",limit = 5)
+    return name[2].text
     

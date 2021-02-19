@@ -1,0 +1,65 @@
+[{ 
+    "name": "Fame Heart", 
+    "description": "Aumenta tu Fuerza",
+    "value": [4],
+    "stat": ["Fuerza"],
+    "amount":1,
+    "limitation": false
+},
+{
+    "name": "The Night's Only Just Begun", 
+    "description": "Aumenta tu Vida",
+    "value": [4],
+    "stat": ["Vida"],
+    "amount":1,
+    "limitation": false
+},
+{
+    "name": "Babe, Drop It", 
+    "description": "Aumenta tu Precision",
+    "value": [3],
+    "stat": ["Precision"],
+    "amount":1,
+    "limitation": false
+},
+{
+    "name": "Speak Of Tomorrow", 
+    "description": "Aumenta tu Velocidad",
+    "value": [4],
+    "stat": ["Velocidad"],
+    "amount":1,
+    "limitation": false
+},
+{
+    "name": "Wild Bodies", 
+    "description": "Aumenta tu Vida pero reduce tu Fuerza",
+    "value": [5,4],
+    "stat": ["Vida","Fuerza"],
+    "amount":1,
+    "limitation": true
+},
+{
+    "name": "Heartbeat Heaven", 
+    "description": "Aumenta tu Fuerza pero reduce tu Precision",
+    "value": [5,2],
+    "stat": ["Fuerza","Precision"],
+    "amount":1,
+    "limitation": true
+},
+{
+    "name": "Losing My Echo", 
+    "description": "Aumenta tu Precision y Velocidad ",
+    "value": [2,3],
+    "stat": ["Precision","Velocidad"],
+    "amount":1,
+    "limitation": false
+},
+{
+    "name": "Sweet Vibrations", 
+    "description": "Aumenta un poco tu Vida y Fuerza ",
+    "value": [1,2],
+    "stat": ["Vida","Fuerza"],
+    "amount":1,
+    "limitation": false
+}
+]

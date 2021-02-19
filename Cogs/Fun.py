@@ -4,21 +4,12 @@ import googletrans as gt
 import random as rd
 from googletrans import Translator
 import asyncio
-from io import BytesIO
 import aiohttp
-import url
-import test
-import Info
+import url , Info
+import typing
 
 translator = Translator()
-format = "%Y/%w/%d \n %H:%M:%S"
-
-punto = {0: 'Con todo el cuerpo', 1: 'Con las Manos', 2: 'Pulsando un botón',
-         3: 'A voluntad del usuario', 4: 'Con Un arma', 5: 'Abriendo algo',
-         6: 'Frotando tu talón', 7: 'Con las Rodillas', 8: 'Cerrando los ojos',
-         9: 'Mordiendo', 10: 'Con las Muñecas', 11: 'Con un chasquido',
-         12: 'Hablando', 13: 'Con las piernas', 14: 'Con ganas de morir',
-         15: 'Con miedo', 16: 'Usando algun objeto', 17: 'Con dolor'}
+format = "%Y/%w/%d %H:%M:%S"
 
 Estado = {'FINISHED':'Finalizado',
           'RELEASING':'En Emision',
@@ -38,6 +29,31 @@ class Fun(commands.Cog):
         else:
             a = translator.translate(oracion,dest = lang)
             await ctx.send(f'*{a.text}*')
+
+    @commands.command(aliases = ['JJ'])
+    async def Joseph(self,ctx):
+        message = await ctx.send('Lo proximo que diras es: ')
+        def check(message):
+            return message.author == ctx.author
+        try:
+            messageUser = await self.bot.wait_for('message', timeout=30.0, check=check)
+        except asyncio.TimeoutError:
+            await ctx.send('No te puedo esperar todo el dia')
+        else:
+            await message.edit(content = f'Lo proximo que diras es: {messageUser.content}' )
+
+    @commands.command(aliases=['KQueen','KQ'])
+    async def KillerQueen(self,ctx):
+        async with ctx.channel.typing():
+            color = discord.Colour.random()
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get("https://some-random-api.ml/facts/cat") as r:
+                    data = await r.json()
+                    embed = discord.Embed(color=color)
+                    translator = Translator()
+                    a = translator.translate(data['fact'],src = 'en',dest = 'es')
+                    embed.add_field(name = '<a:GatituQueen:808381338096762930> Gatitu <a:GatituQueen:808381338096762930>',value= a.text, inline=False)
+                    await ctx.send(embed=embed)
 
     @commands.command(aliases=['BR'])
     @commands.guild_only()
@@ -97,26 +113,6 @@ class Fun(commands.Cog):
                         else:
                             await ctx.send('Asi te queria agarrar puerco')
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(rate = 1,per = 2.5, type = commands.BucketType.channel)
-    @commands.max_concurrency(number = 3, per = commands.BucketType.guild)
-    async def Stats(self,ctx, *, member: discord.Member = None):
-        async with ctx.channel.typing():
-            if not member:
-                member = ctx.message.author
-            nombre = member.name
-            datos = await Info.GetInfo(member)
-            stand = datos[0]
-            values = datos[1]
-            asset = member.avatar_url_as(size=256)
-            pfp = BytesIO(await asset.read())
-            Imagen = test.Fondo(nombre= nombre,nick= stand,data=pfp,values = values)
-            arr = BytesIO()
-            Imagen.save(arr, format='JPEG')
-            arr.seek(0)
-            await ctx.send(file = discord.File(arr, 'Stats.png'))
-            arr.close()
 
     @commands.command(aliases=['ZH'])
     async def Zahando(self,ctx,opcion:int = 1, *, member: discord.Member = None):
@@ -138,34 +134,6 @@ class Fun(commands.Cog):
         elif opcion == 7:
             await ctx.send("https://some-random-api.ml/canvas/wasted?avatar=" + str(avatar))
 
-    @commands.command(aliases=['A'])
-    @commands.guild_only()
-    @commands.cooldown(rate = 1,per = 1.5, type = commands.BucketType.guild)
-    @commands.max_concurrency(number = 5, per = commands.BucketType.guild)
-    async def Ability(self,ctx):
-        color = discord.Colour.random()
-        info = await url.get_info()
-        datos = await Info.GetInfo(ctx.author)
-        stand = datos[0]
-        embedVar = discord.Embed(timestamp = ctx.message.created_at,color = color)
-        embedVar.set_author(name = ctx.author.name,icon_url=ctx.author.avatar_url)
-        embedVar.add_field(name='『Nombre Stand』',value=stand)
-        embedVar.add_field(name='Nombre Habilidad',value=info[0])
-        embedVar.add_field(name='Rango',value= str(rd.randint(1,130)) + ' m')
-        embedVar.add_field(name='Descripcion',value=info[1], inline=False)
-        embedVar.add_field(name='Metodo de activacion',value=rd.choice(punto))
-        embedVar.add_field(name='Limitacion',value=info[2])
-        await ctx.send(embed=embedVar)
-
-
-    @commands.command()
-    @commands.cooldown(rate = 1,per = 10, type = commands.BucketType.user)
-    async def Arrow(self,ctx):
-        stand  = await url.nombre()
-        values = [rd.randint(1,5) for i in range(6)]
-        await Info.Guardar(user = ctx.author, atributos = values, stand = stand)
-        await ctx.send('https://media1.tenor.com/images/36d30efef07ecae295d330588618fc8b/tenor.gif?itemid=14490536')
-
 
     @commands.command(aliases=['J'])
     async def Jotaro(self,ctx):
@@ -181,52 +149,48 @@ class Fun(commands.Cog):
         else:
             await ctx.send('https://i.kym-cdn.com/photos/images/newsfeed/001/488/696/0e7.jpg')
         
-
-    '''
-    @commands.command(aliases=['CJ'])
-        @commands.guild_only()
-        async def CocoJumbo(self,ctx,*,emoji : discord.Emoji = None):
-            if not emoji:
-                e = ctx.guild.emojis
-                await ctx.send(rd.choice(e))
-            else:
-                await ctx.send(emoji.url)
-    '''
-        
     @commands.command(aliases=['CJ'])
     @commands.guild_only()
-    async def CocoJumbo(self,ctx,*,message :str = None):
+    async def CocoJumbo(self,ctx,*,Emoji: typing.Union[discord.Emoji,str] = None):
         emojis = ctx.guild.emojis
-        if not message:
+        if not Emoji:
             await ctx.send(rd.choice(emojis))
+        elif type(Emoji) is discord.Emoji:
+            await ctx.send(Emoji.url)
         else:
             for emoji in emojis:
-                if emoji.name in message:
+                if emoji.name in Emoji:
                     await ctx.send(emoji.url)
 
-    @commands.command()
-    async def Stand(self,ctx, *, member: discord.Member = None):
+    @commands.command(aliases=['HD'])
+    async def HeavensDoor(self,ctx, *, member: discord.Member = None):
         if not member:
-            member = ctx.message.author
+            member = ctx.author
         userAvatar = member.avatar_url
         datos = await Info.GetInfo(member)
-        stand = datos[0]
-        values = datos[1]
+        stand = 'N/A'
+        NStand = 'N/A'
+        if not datos:
+            stand = 'Aun no ha activado el Stand'
+            NStand = 'Sin Stand'
+        else:
+            stand = datos[0]
+            NStand = 'Stand'
         color = discord.Colour.random()
-        embedVar = discord.Embed(title="Stand", description= f'『{stand}』', color = color)
+        Fecha = f'**Discord: **{member.created_at.strftime(format)}\n**{member.guild.name}: **{member.joined_at.strftime(format)}'
+        embedVar = discord.Embed(title = NStand, description = f'**『{stand}』**', color = color)
         embedVar.add_field(name="Nombre usuario", value=member.name)
-        embedVar.add_field(name="Alias", value=member.nick)
-        embedVar.add_field(name="Se unio el", value=member.joined_at.strftime(format))
-        embedVar.add_field(name="Rol mas alto", value= member.top_role)
+        embedVar.add_field(name="Alias", value = member.nick)
+        embedVar.add_field(name="Se unio a", value = Fecha, inline=False)
+        embedVar.add_field(name="Rol mas alto", value= member.top_role.mention, inline=False)
         actividad = member.activity
         if not actividad:
-            embedVar.add_field(name="Actividad", value= 'Ninguna')
+            embedVar.add_field(name="Actividad", value= 'Ninguna', inline=False)
         else:
-            embedVar.add_field(name="Actividad", value= actividad.name)
+            embedVar.add_field(name="Actividad", value= actividad.name, inline=False)
+            embedVar.add_field(name="Url Actividad", value= f'[Actividad]({actividad.large_image_url})', inline=False)
         embedVar.set_image(url=userAvatar)
-        embedVar.add_field(name="Atributos Stand", value= values)
         await ctx.send(embed=embedVar)
-
 
     @commands.command(aliases=['Savatar','SA'])
     async def StandAvatar(self,ctx):
@@ -237,31 +201,6 @@ class Fun(commands.Cog):
                 for user in mentions:
                     userAvatar = user.avatar_url
                     await ctx.send(userAvatar)
-
-    @commands.command(aliases = ['JJ'])
-    async def Joseph(self,ctx):
-        message = await ctx.send('Lo proximo que diras es: ')
-        def check(message):
-            return message.author == ctx.author
-        try:
-            messageUser = await self.bot.wait_for('message', timeout=30.0, check=check)
-        except asyncio.TimeoutError:
-            await ctx.send('No te puedo esperar todo el dia')
-        else:
-            await message.edit(content = f'Lo proximo que diras es: {messageUser.content}' )
-
-    @commands.command(aliases=['KQueen','KQ'])
-    async def KillerQueen(self,ctx):
-        async with ctx.channel.typing():
-            color = discord.Colour.random()
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get("https://some-random-api.ml/facts/cat") as r:
-                    data = await r.json()
-                    embed = discord.Embed(color=color)
-                    translator = Translator()
-                    a = translator.translate(data['fact'],src = 'en',dest = 'es')
-                    embed.add_field(name = '<a:GatituQueen:808381338096762930> Gatitu <a:GatituQueen:808381338096762930>',value= a.text, inline=False)
-                    await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Fun(bot))

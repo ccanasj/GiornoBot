@@ -30,7 +30,13 @@ class Help(commands.Cog):
         embed.add_field(name="**__Moderacion__**",
         value='BitesTheDust \nEchoes \nStarPlatinum \nZaWarudo \nSoftAndWet \nKingCrimson \nD4C \nUnmute (De momento xd) \nChangePrefix \nSetWelcomeChannel')
         embed.add_field(name="**__Entretenimiento__**", 
-        value='Ability \nJotaro \nKillerQueen \nMoodyBlues \nCocoJumbo \nStand \nStandAvatar \nStats \nZahando \nBohemianRhapsody \nArrow')
+        value='Jotaro \nKillerQueen \nMoodyBlues \nCocoJumbo \nZahando() \nBohemianRhapsody \nStandAvatar \nJoseph \nHeavensDoor ')
+        embed.add_field(name="**__Combate__**", 
+        value='Combat \nChallenge')
+        embed.add_field(name="**__Info Stands__**", 
+        value='Start \nStand  \nStats \nAbility ')
+        embed.add_field(name="**__Objetos__**", 
+        value='Explore \nInventory \nCraft \nUse \nRecipes ')
         embed.set_footer(text = 'Para ver un comando en especifico pon [Prefijo] help <Nombre Comando>\n¡Para ver el prefijo de este server mencioname! \nLo que este entre <> es opcional, lo que este en [] es necesario completar')
         await ctx.send(embed = embed)
 
@@ -40,10 +46,10 @@ class Help(commands.Cog):
         embed.add_field(name= '**__Sintaxis__**' , value='$Ability  <mencion>  \n$A  <mencion> ')
         await ctx.send(embed = embed)
 
-    @help.command()
-    async def Stand(self,ctx):
-        embed = discord.Embed(title = '**__Stand__**', description = 'Este comando te da informacion del usuario ',color = discord.Colour.dark_orange())
-        embed.add_field(name= '**__Sintaxis__**' , value='$Stand  <mencion>')
+    @help.command(aliases=['HD'])
+    async def HeavensDoor(self,ctx):
+        embed = discord.Embed(title = '**__Heaven\'sDoor__**', description = 'Este comando te da informacion del usuario ',color = discord.Colour.dark_orange())
+        embed.add_field(name= '**__Sintaxis__**' , value='$HeavensDoor <mencion> \n$HD  <mencion> ')
         await ctx.send(embed = embed)
     
     @help.command(aliases = ['CJ'])
