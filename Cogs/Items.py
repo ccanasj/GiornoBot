@@ -67,7 +67,7 @@ class Items(commands.Cog):
             else:
                 await ctx.send(f'Este no es un objeto valido')
 
-    @commands.command()
+    @commands.command(aliases=['EX'])
     @commands.check(CheckExiste)
     @commands.cooldown(rate = 1,per = 15, type = commands.BucketType.user)
     async def Explore(self,ctx):
@@ -79,7 +79,7 @@ class Items(commands.Cog):
         else:
             await ctx.send('Lo intentaste pero no encontraste nada')
 
-    @commands.command()
+    @commands.command(aliases=['i','inv'])
     @commands.check(CheckExiste)
     async def Inventory(self,ctx):
         inventario = await Info.GetObjetos(ctx.author)
