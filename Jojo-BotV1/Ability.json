@@ -1,0 +1,148 @@
+[{ 
+    "name": "Fame Heart", 
+    "description": "Aumenta tu Fuerza",
+    "value": [1],
+    "stat": ["Fuerza"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "The Night's Only Just Begun", 
+    "description": "Aumenta tu Vida",
+    "value": [1],
+    "stat": ["Vida"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Babe, Drop It", 
+    "description": "Aumenta tu Precision y un poco tu Vida",
+    "value": [0.7,0.5],
+    "stat": ["Precision","Vida"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Speak Of Tomorrow", 
+    "description": "Aumenta tu Velocidad y un poco tu Fuerza",
+    "value": [1,0.5],
+    "stat": ["Velocidad","Fuerza"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Wild Bodies", 
+    "description": "Aumenta tu Vida pero reduce tu Fuerza",
+    "value": [1.5,1.5],
+    "stat": ["Vida","Fuerza"],
+    "amount":1,
+    "limitation": true,
+    "type": "self"
+},
+{
+    "name": "Heartbeat Heaven", 
+    "description": "Aumenta tu Fuerza pero reduce tu Precision",
+    "value": [1.5,1.5],
+    "stat": ["Fuerza","Precision"],
+    "amount":1,
+    "limitation": true,
+    "type": "self"
+},
+{
+    "name": "Losing My Echo", 
+    "description": "Aumenta tu Precision, Rango y Velocidad ",
+    "value": [0.6,0.3,1],
+    "stat": ["Precision","Rango","Velocidad"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Sweet Vibrations", 
+    "description": "Aumenta un poco tu Vida y Fuerza ",
+    "value": [0.8,0.8],
+    "stat": ["Vida","Fuerza"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "A Way Of My Obsession", 
+    "description": "Aumenta un poco tu Velocidad, Precision y Fuerza",
+    "value": [1,0.5,0.5],
+    "stat": ["Velocidad","Precision","Fuerza"],
+    "amount":1,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Preparing Fireworks", 
+    "description": "Aumenta un poco tu Fuerza (Lo puedes usar 3 veces)",
+    "value": [0.7],
+    "stat": ["Fuerza"],
+    "amount":3,
+    "limitation": false,
+    "type": "self"
+},
+{
+    "name": "Black World", 
+    "description": "Reduces la Precision del enemigo",
+    "value": [0.3],
+    "stat": ["Precision"],
+    "amount":1,
+    "limitation": false,
+    "type": "target"
+},
+{
+    "name": "Give Back My Rhimes", 
+    "description": "Reduces la Velocidad y un poco el Rango del enemigo",
+    "value": [1,0.2],
+    "stat": ["Velocidad","Rango"],
+    "amount":1,
+    "limitation": false,
+    "type": "target"
+},
+{
+    "name": "Weakness Memories", 
+    "description": "Reduces la Fuerza del enemigo",
+    "value": [0.6],
+    "stat": ["Fuerza"],
+    "amount":1,
+    "limitation": false,
+    "type": "target"
+},
+{
+    "name": "Purple Haze", 
+    "description": "Envenenas al enemigo y reduces un poco su velocidad",
+    "value": [0.5],
+    "stat": ["Velocidad"],
+    "amount":1,
+    "limitation": true,
+    "type": "target",
+    "status":["Poison",5]
+},
+{
+    "name": "Burning Kiss", 
+    "description": "Quemas al enemigo y reduces un poco su Rango",
+    "value": [0.5],
+    "stat": ["Rango"],
+    "amount":1,
+    "limitation": true,
+    "type": "target",
+    "status":["Burn",5]
+},
+{
+    "name": "The World", 
+    "description": "Detienes al enemigo y reduces un poco su velocidad",
+    "value": [0.5],
+    "stat": ["Velocidad"],
+    "amount":1,
+    "limitation": true,
+    "type": "target",
+    "status":["Time Stop",1]
+}
+]
