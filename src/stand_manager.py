@@ -2,7 +2,7 @@ from random import choice, choices, randint
 from json import load
 from api import get_name
 
-with open('src\Skills.json', 'r') as f:
+with open('./Skills.json', 'r') as f:
     skills = load(f)
 
 categories = {0: 'E', 1: 'D', 2: 'C', 3: 'B', 4: 'A', 5: 'S'}
