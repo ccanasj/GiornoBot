@@ -1,0 +1,32 @@
+[
+  {
+    "id": 0,
+    "name": "Ripple Overdrive",
+    "values": { "hp": 5 },
+    "self": false
+  },
+  {
+    "id": 1,
+    "name": "Sucker Punch",
+    "values": { "hp": 3, "velocity": 3 },
+    "self": false
+  },
+  {
+    "id": 2,
+    "name": "Bulk up",
+    "values": { "power": 3, "accuracy": 2 },
+    "self": true
+  },
+  {
+    "id": 3,
+    "name": "Instant Regeneration",
+    "values": { "hp": 5, "velocity": -2 },
+    "self": true
+  },
+  {
+    "id": 4,
+    "name": "Thunder Cross Split Attack",
+    "values": { "hp": 3, "accuracy": 2 },
+    "self": false
+  }
+]
