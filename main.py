@@ -1,6 +1,6 @@
 from src import Giorno, Help
 from src.helptest import MyHelp
-from TOKEN import DISCORD
+from os import getenv
 
 bot = Giorno()
 
@@ -18,4 +18,4 @@ for cog in cogs_list:
 
 bot.help_command = MyHelp()
 
-bot.run(DISCORD)
+bot.run(getenv('DISCORD'))

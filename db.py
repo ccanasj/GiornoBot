@@ -1,7 +1,7 @@
 from pymongo import MongoClient
-from TOKEN import MONGO
+from os import getenv
 
-cluster = MongoClient(MONGO)
+cluster = MongoClient(getenv('MONGO'))
 
 collections = cluster["GiornoBot"]["Players"]
 
